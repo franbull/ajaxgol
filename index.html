@@ -1,0 +1,70 @@
+<html>
+<head>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="ajax.js"></script>
+<script type="text/javascript" src="jquery.json-2.3.min.js"></script>
+<script type="text/javascript">
+    var x=0;
+//    var gen = [[20, 20], [20, 25], [20, 30], [15, 30], [10, 25]];//glider
+    var gen = [];
+    function ajaxSuccess(result){
+       result = $.trim(result)
+       if (result == ""){
+           result = [];
+       } else {
+           result = $.evalJSON(result);
+       }
+       gen = result;
+    }
+    
+    function init() {
+        ctx = document.getElementById('canvas').getContext('2d');
+        return setInterval(draw, 100);
+    }
+    
+    function draw() {
+        if ( x < 1000 ) {
+            var myurl = "http://www.abullcreativ.com/fran/cgi-bin/index.cgi";
+            ajax(myurl, {data:$.toJSON(gen)}, ajaxSuccess);
+            ctx.clearRect(0,0,400,400);
+            ctx.strokeRect(0,0,400,400);
+            for (var i = 0; i < gen.length; i++) {
+                drawAGuy(gen[i]);
+            }
+            ctx.fillText(gen.length, 380, 390);
+            x += 1;
+        }
+    }
+    
+    function drawAGuy(coords){
+        ctx.fillRect(coords[0], coords[1], 5, 5);   
+    }
+</script>
+
+<style type="text/css">
+    #canvasdiv {
+        width: 400px;
+        height: 400px;
+        margin-left: auto;
+        margin-right: auto;
+        border: 1px solid black;
+    }
+    p {
+        text-align:justify;
+        width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+        font-family:sans-serif;
+    }
+</style>
+</head>
+<body onload="init();">
+    <p>
+    Ok, so this is the same game of life as the last one, except it's done server side with ajax (json not xml). I did it to practice my javascript again (hey look, jQuery). It's exactly the same algo as last time (so there's no boundary conditions but it still gets slow when there are a lot of live cells).
+    </p>
+    <div id="canvasdiv">
+        <canvas id="canvas" width="400" height="400">There should be stuff here.</canvas>
+    </div>
+    <div id="ajaxstatus"></div>
+</body>
+</html>
