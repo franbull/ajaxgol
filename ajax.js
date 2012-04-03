@@ -22,7 +22,9 @@ function ajax(url, data, successFunction) {
         }
     }
     
-    $("#ajaxstatus").html("loading");
+    if (showStatus){
+	    $("#ajaxstatus").html("loading");
+    }
     
     var jqxhr = $.post(url, data, successFunction)
         .complete(completeFn)

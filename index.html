@@ -7,6 +7,7 @@
     var x=0;
 //    var gen = [[20, 20], [20, 25], [20, 30], [15, 30], [10, 25]];//glider
     var gen = [];
+    var ready=true;
     function ajaxSuccess(result){
        result = $.trim(result)
        if (result == ""){
@@ -15,6 +16,7 @@
            result = $.evalJSON(result);
        }
        gen = result;
+       ready=true;
     }
     
     function init() {
@@ -24,8 +26,11 @@
     
     function draw() {
         if ( x < 1000 ) {
-            var myurl = "http://www.abullcreativ.com/fran/cgi-bin/index.cgi";
-            ajax(myurl, {data:$.toJSON(gen)}, ajaxSuccess);
+            var myurl = "cgi-bin/index.cgi";
+            if (ready) {
+		    ajax(myurl, {data:$.toJSON(gen)}, ajaxSuccess);
+                    ready = false;
+            }
             ctx.clearRect(0,0,400,400);
             ctx.strokeRect(0,0,400,400);
             for (var i = 0; i < gen.length; i++) {
@@ -49,7 +54,7 @@
         margin-right: auto;
         border: 1px solid black;
     }
-    p {
+    p,h1 {
         text-align:justify;
         width: 400px;
         margin-left: auto;
@@ -59,8 +64,9 @@
 </style>
 </head>
 <body onload="init();">
+    <h1>Ajax game of life</h1>
     <p>
-    Ok, so this is the same game of life as the last one, except it's done server side with ajax (json not xml). I did it to practice my javascript again (hey look, jQuery). It's exactly the same algo as last time (so there's no boundary conditions but it still gets slow when there are a lot of live cells).
+    Ok, so this is the same game of life as the last one, except it's done server side with ajax (json not xml). I did it to practice my javascript again (hey look, jQuery). It's exactly the same algo as last time (so there's no boundary conditions but it still gets slow when there are a lot of live cells). And I put the source on <a href="https://github.com/franbull/ajaxgol">github</a>
     </p>
     <div id="canvasdiv">
         <canvas id="canvas" width="400" height="400">There should be stuff here.</canvas>
